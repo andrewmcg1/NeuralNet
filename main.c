@@ -59,11 +59,11 @@ int main()
 {
     srand(time(NULL));
 
-    int sizes[] = {784, 30, 10};
+    int sizes[] = {784, 64, 64, 10};
 
     load_mnist();
 
-    neural_net_t net = allocate_neural_net(3, sizes);
+    neural_net_t net = allocate_neural_net(4, sizes);
     printf("Allocated Network\n");
 
     // TODO: Shuffle data
@@ -93,29 +93,24 @@ int main()
 
     return 0;
 }
-
+//*/
 /*
 int main()
 {
-    matrix_t mat = init_matrix(3, 4);
-    mat.arr[0] = 1;
-    mat.arr[1] = 2; 
-    mat.arr[2] = 3
-    mat.arr[3] = 4;
-    mat.arr[4] = 5;
-    mat.arr[5] = 6;
-    mat.arr[6] = 7;
-    mat.arr[7] = 8;
-    mat.arr[8] = 9;
-    mat.arr[9] = 10;
-    mat.arr[10] = 11;
-    mat.arr[11] = 12;
+    neural_net_t net = allocate_neural_net(3, (int[]){10, 64, 10});
 
-    matrix_t mat2 = init_matrix(4, 3);
+    vector_t vec = init_vector(10);
+    matrix_t mat = init_matrix(10, 10);
 
-    transpose(&mat2, &mat);
+    forward_pass(&net);
+    backward_pass(&net, &vec);
 
-    print_matrix(&mat2);
+    train(&net, &mat, &mat, 1, 1, 1.0, &mat, &mat);
+
+    free_network(&net);
+    free_vector(&vec);
+    free_matrix(&mat);
 
     return 0;
-}*/
+}
+//*/

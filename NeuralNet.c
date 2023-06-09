@@ -2,6 +2,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <pthread.h>
+
+pthread_t test_thread;
+pthread_t train_thread;
+
+
 
 neural_net_t allocate_neural_net(int layers, int* layer_sizes)
 {
@@ -144,27 +150,17 @@ void train(neural_net_t *network, matrix_t *inputs, matrix_t *expected_outputs,
            int epochs, int batch_size, double learning_rate,
            matrix_t *test_inputs, matrix_t *test_expected_outputs)
 {
+
     printf("\n");
     matrix_t temp_weights[network->num_layers];
     for (int i = 1; i < network->num_layers; i++)
     {
         temp_weights[i] = init_matrix(network->layers[i].weights.row, network->layers[i].weights.col);
-        for (int k = 0; k < network->layers[i].weights.row; k++)
-        {
-            for (int l = 0; l < network->layers[i].weights.col; l++)
-            {
-                temp_weights[i].arr[l + k * temp_weights[i].col] = 0;
-            }
-        }
     }
     vector_t temp_biases[network->num_layers];
     for (int i = 1; i < network->num_layers; i++)
     {
         temp_biases[i] = init_vector(network->layers[i].biases.len);
-        for (int k = 0; k < network->layers[i].biases.len; k++)
-        {
-            temp_biases[i].arr[k] = 0;
-        }
     }
     for (int i = 0; i < epochs; i++)
     {
@@ -176,9 +172,9 @@ void train(neural_net_t *network, matrix_t *inputs, matrix_t *expected_outputs,
                 network->layers[0].activated_outputs.arr[k] = inputs->arr[j * inputs->col + k];
             }
             vector_t expected_outputs2 = init_vector(10);
-            for (int i = 0; i < 10; i++)
+            for (int r = 0; r < 10; r++)
             {
-                expected_outputs2.arr[i] = expected_outputs->arr[j * expected_outputs->col + i];
+                expected_outputs2.arr[r] = expected_outputs->arr[j * expected_outputs->col + r];
             }
             forward_pass(network);
             backward_pass(network, &expected_outputs2);
@@ -198,6 +194,28 @@ void train(neural_net_t *network, matrix_t *inputs, matrix_t *expected_outputs,
                         {
                             temp_weights[a].arr[c + b * temp_weights[a].col] = 0;
                         }
+                    }
+                }
+            }
+            if (j % batch_size == 0 || j == inputs->row - 1)
+            {
+                update_weights(network, temp_weights, batch_size, learning_rate);
+                update_biases(network, temp_biases, batch_size, learning_rate);
+                for (int a = 1; a < network->num_layers - 1; a++)
+                {
+                    for (int b = 0; b < network->layers[a].weights.row; b++)
+                    {
+                        for (int c = 0; c < network->layers[a].weights.col; c++)
+                        {
+                            temp_weights[a].arr[c + b * temp_weights[a].col] = 0;
+                        }
+                    }
+                }
+                for (int a = 1; a < network->num_layers - 1; a++)
+                {
+                    for (int b = 0; b < network->layers[a].biases.len; b++)
+                    {
+                        temp_biases[a].arr[b] = 0;
                     }
                 }
                 for (int a = 1; a < network->num_layers - 1; a++)

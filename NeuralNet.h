@@ -47,9 +47,13 @@ void train(neural_net_t *network, matrix_t *inputs, matrix_t *expected_outputs,
            int epochs, int batch_size, double learning_rate,
            matrix_t *test_inputs, matrix_t *test_expected_outputs);
 
+void* train_t(void* args_t);
+
 void update_weights(neural_net_t *network, matrix_t *temp_weights, int batch_size, double learning_rate);
 
 void test(neural_net_t *network, matrix_t *inputs, matrix_t *expected_outputs);
+
+void* test_t(void* args_t);
 
 void update_temp_weights(matrix_t *temp_weights, neural_net_t *network, double learning_rate);
 

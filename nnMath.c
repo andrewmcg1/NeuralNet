@@ -61,21 +61,21 @@ void free_matrix(matrix_t *mat)
 
 double *allocate_mat_arr(int row, int col)
 {
-    return calloc(row*col, sizeof(double));
+    return (double*)calloc(row*col, sizeof(double));
 }
 double *allocate_vec_arr(int len)
 {
-    return calloc(len, sizeof(double));
+    return (double*)calloc(len, sizeof(double));
 }
 
 matrix_t *allocate_mat()
 {
-    return malloc(sizeof(matrix_t));
+    return (matrix_t*)malloc(sizeof(matrix_t));
 }
 
 vector_t *allocate_vec()
 {
-    return malloc(sizeof(vector_t));
+    return (vector_t*)malloc(sizeof(vector_t));
 }
 
 void multiply_mat_vec(vector_t *out, matrix_t *mat, vector_t *vec)
@@ -213,7 +213,7 @@ void multiply_vec_vec(matrix_t *out, vector_t *v1, vector_t *v2)
     {
         for (int j = 0; j < out->col; j++)
         {
-            out->arr[j + i * out->col] = v1->arr[j] * v2->arr[i];
+            out->arr[j + i * out->col] = v1->arr[i] * v2->arr[j];
         }
     }
 }
