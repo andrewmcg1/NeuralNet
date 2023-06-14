@@ -2,28 +2,29 @@
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
+#include <omp.h>
 
 #ifndef NN_MATH_H
 #define NN_MATH_H
 
 typedef struct
 {
-    double *arr;
+    float *arr;
     int row;
     int col;
 } matrix_t;
 
 typedef struct
 {
-    double *arr;
+    float *arr;
     int len;
 } vector_t;
 
 // Allocates space of a matrix and a vector
 vector_t init_vector(int len);
 matrix_t init_matrix(int row, int col);
-double *allocate_vec_arr(int len);
-double *allocate_mat_arr(int rows, int cols);
+float *allocate_vec_arr(int len);
+float *allocate_mat_arr(int rows, int cols);
 matrix_t *allocate_mat();
 vector_t *allocate_vec();
 
@@ -39,7 +40,7 @@ void add_vec(vector_t *out, vector_t *v1, vector_t *v2);
 void subtract_vec(vector_t *out, vector_t *v1, vector_t *v2);
 
 // Sigmoid of a single value
-double sigmoid(double val);
+float sigmoid(float val);
 
 // Sigmoid of a matrix
 void sigmoid_mat(matrix_t *out, matrix_t *mat);
@@ -74,11 +75,11 @@ void layer_error(vector_t *out,
 
 void multiply_vec_vec(matrix_t *out, vector_t *v1, vector_t *v2);
 
-void scalar_multiply_mat(matrix_t *out, matrix_t *mat, double scalar);
+void scalar_multiply_mat(matrix_t *out, matrix_t *mat, float scalar);
 
 void subtract_mat(matrix_t *out, matrix_t *mat1, matrix_t *mat2);
 
-void scalar_multiply_vec(vector_t *out, vector_t *vec, double scalar);
+void scalar_multiply_vec(vector_t *out, vector_t *vec, float scalar);
 
 void add_mat(matrix_t *out, matrix_t *mat1, matrix_t *mat2);
 
